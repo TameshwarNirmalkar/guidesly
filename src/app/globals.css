@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import url('../styles/homepage.css');
+@import url('../styles/spinner-loader.css');
 
 /* :root {
   --foreground-rgb: 0, 0, 0;

@@ -1,38 +1,30 @@
 "use client";
 
-import { useCallback, useEffect, useState, createContext, useMemo } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  createContext,
+  useMemo,
+} from "react";
 import { GrCart } from "react-icons/gr";
 import { CartContext } from "@/hooks/CartContext";
 import Header from "@/components/Header";
 import useProductList from "@/hooks/useProductList";
+import SpinnerLoader from "@/components/SpinnerLoader";
 
 export default function HomePage() {
-  const productList = useProductList();
+  const { productList, isLoading } = useProductList();
   const [item, setItem] = useState<any[]>([]);
-  // const [productList, setProductList] = useState<any[]>([]);
-  // const [item, setItem] = useState<any[]>([]);
 
-  // const getProductList = useCallback(async () => {
-  //   const res = await fetch("https://fakestoreapi.com/products").then((res) =>
-  //     res.json()
-  //   );
-  //   setProductList(res);
-  //   console.log("REs: ", res);
-  // }, []);
-
-  // useEffect(() => {
-  //   getProductList();
-  // }, []);
-
-  const allIds = useMemo(() => item.map((el) => el.id), [item])
+  const allIds = useMemo(() => item.map((el) => el.id), [item]);
 
   const onAddItemToCart = useCallback(
     (el: any) => {
       const hasItem = allIds.includes(el.id);
-      if(hasItem){
-        setItem([...item].filter(itm => itm.id !== el.id));
+      if (hasItem) {
+        setItem([...item].filter((itm) => itm.id !== el.id));
       } else {
-
         setItem([...item].concat(el));
       }
     },
@@ -42,9 +34,9 @@ export default function HomePage() {
   return (
     <CartContext.Provider value={{ item, setItem }}>
       <main className="">
-      <header>
-            <Header />
-          </header>
+        <header>
+          <Header />
+        </header>
 
         <div className="bg-white">
           <div className="mx-auto max-w-2xl lg:max-w-7xl pt-3">
@@ -78,7 +70,9 @@ export default function HomePage() {
                           className="p-2 cursor-pointer"
                           onClick={() => onAddItemToCart(el)}
                         >
-                          <GrCart color={allIds.includes(el.id) ? 'red' : 'black' } />
+                          <GrCart
+                            color={allIds.includes(el.id) ? "red" : "black"}
+                          />
                         </p>
                       </div>
                     </div>
@@ -89,6 +83,7 @@ export default function HomePage() {
           </div>
         </div>
       </main>
+      <SpinnerLoader loading={isLoading} />
     </CartContext.Provider>
   );
 }
