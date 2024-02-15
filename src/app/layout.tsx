@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="App">
         <Providers>
-          <header>
+          <header className="fixed-header">
             <Header />
           </header>
           <main>{children}</main>
