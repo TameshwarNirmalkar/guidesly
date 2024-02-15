@@ -1,8 +1,15 @@
 "use client";
 
-import { store } from "./store";
+import { useRef } from "react";
+import { AppStore, makeStore, store } from "./store";
 import { Provider } from "react-redux";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <Provider store={store}>{children}</Provider>;
+
+  const storeRef = useRef<AppStore | null>(null);
+  if (!storeRef.current) {
+    storeRef.current = makeStore()
+  }
+
+  return <Provider store={storeRef.current}>{children}</Provider>;
 }
