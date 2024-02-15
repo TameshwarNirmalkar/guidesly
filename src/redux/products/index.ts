@@ -16,9 +16,10 @@ interface ProductStateI {
     selectedItems: any[];
     productCollection: ProductCollectionI[];
     isLoading: boolean;
+    clonedData: ProductCollectionI[];
 }
 
-const initialState = { selectedItems: [], productCollection: [], isLoading: false } as ProductStateI
+const initialState = { selectedItems: [], productCollection: [], isLoading: false, clonedData: [] } as ProductStateI
 
 const productSlice = createSlice({
     name: 'PRODUCT_SLICE',
@@ -32,9 +33,12 @@ const productSlice = createSlice({
         },
         setProductCollection(state: AppState, action: PayloadAction<ProductCollectionI[]>) {
             state.productCollection = action.payload
+        },
+        setClonedData(state: AppState, action: PayloadAction<ProductCollectionI[]>) {
+            state.clonedData = action.payload
         }
     },
 }) as any
 
-export const { setSelectedItems, setProductCollection, setIsLoading } = productSlice.actions
+export const { setSelectedItems, setProductCollection, setIsLoading, setClonedData } = productSlice.actions
 export default productSlice.reducer

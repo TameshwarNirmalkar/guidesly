@@ -14,22 +14,24 @@ import { GrCart } from "react-icons/gr";
 import SpinnerLoader from "@/components/SpinnerLoader";
 import { useAppDispatch, useAppSelector } from "@redux-store/reduxTypes";
 import { AppState } from "@redux-store/store";
-import { setSelectedItems } from "@redux-store/products";
+import { setProductCollection, setSelectedItems } from "@redux-store/products";
 import { createProductCollectionAction } from "@redux-store/products/action";
 
 export default function HomePage() {
   // const { productList, isLoading } = useProductList();
   // const [item, setItem] = useState<any[]>([]);
 
-  const { isLoading, selectedItems, productCollection } = useAppSelector(
-    (state: AppState) => ({ ...state.products })
-  );
+  const { isLoading, selectedItems, productCollection, clonedData } =
+    useAppSelector((state: AppState) => ({ ...state.products }));
   const dispatch = useAppDispatch();
 
-  const allIds = useMemo(() => selectedItems.map((el: any) => el.id),[selectedItems]);
+  const allIds = useMemo(
+    () => selectedItems.map((el: any) => el.id),
+    [selectedItems]
+  );
 
   useEffect(() => {
-    if(!productCollection.length){
+    if (!productCollection.length) {
       dispatch(createProductCollectionAction(null));
     }
   }, []);
@@ -50,14 +52,42 @@ export default function HomePage() {
     [selectedItems, dispatch]
   );
 
+  const onSearchHandler = useCallback(
+    (val: string) => {
+      if (val) {
+        setTimeout(() => {
+          const filteredValue = productCollection.filter(
+            (el: any) => el.title.toLowerCase().indexOf(val) !== -1
+          );
+          dispatch(setProductCollection(filteredValue));
+        }, 500);
+      } else {
+        dispatch(setProductCollection(clonedData));
+      }
+    },
+    [productCollection, dispatch]
+  );
+
   return (
     // <CartContext.Provider value={{ item, setItem }}>
     <main className="">
       <div className="bg-white">
         <div className="mx-auto max-w-2xl lg:max-w-7xl pt-3">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-            Today's Deal
-          </h2>
+          <div>
+            <span>
+              <input
+                placeholder="Search product by name"
+                className="w-full rounded p-2 border"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  onSearchHandler(e.target.value)
+                }
+              />
+            </span>
+
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+              Today's Deal
+            </h2>
+          </div>
 
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
             {productCollection?.map((el: any) => (
