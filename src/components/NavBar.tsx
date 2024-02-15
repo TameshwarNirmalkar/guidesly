@@ -43,7 +43,7 @@ const NavBar: FC<{cartItems: any[]}> = memo((props) => {
           </Link>
         <div>
           <Link href={`/cart-items/${routePath}`} className="flex items-center">
-            <span className="pr-2"><GrCart /></span> 
+            <span className="pr-1"><GrCart /></span> 
             {!!selectedItems.length && <span className="text-red-500">{selectedItems.length}</span>}
             </Link>
           </div>

@@ -61,7 +61,7 @@ const CartItemsPage: FC<{}> = (props) => {
         <div className="bg-white">
           <div className="mx-auto max-w-2xl lg:max-w-7xl pt-3">
             <h2 className="text-2xl font-bold tracking-tight text-gray-900 py-4">
-              Selected Items
+              Added cart items
             </h2>
 
             <div className="grid grid-flow-col gap-3">
