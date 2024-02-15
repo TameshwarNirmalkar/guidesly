@@ -1,6 +1,6 @@
 import { ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import type { AppState } from './store';
+import { TypedUseSelectorHook, useDispatch, useSelector, useStore } from 'react-redux';
+import type { AppState, AppStore } from './store';
 
 export type TDispatch = ThunkDispatch<AppState, void, UnknownAction>;
 
@@ -8,3 +8,5 @@ export type TDispatch = ThunkDispatch<AppState, void, UnknownAction>;
 export const useAppDispatch = (): TDispatch => useDispatch<TDispatch>();
 
 export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;
+
+export const useAppStore: () => AppStore = useStore;
