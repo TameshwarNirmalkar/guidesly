@@ -1,21 +1,24 @@
 "use client";
 
+import { useAppSelector } from "@/redux/reduxTypes";
+import { AppState } from "@/redux/store";
 import Link from "next/link";
 import React, { FC, memo, useMemo } from "react";
 import { BsAmazon } from "react-icons/bs";
 import { GrCart } from "react-icons/gr";
 
 const NavBar: FC<{cartItems: any[]}> = memo((props) => {
+  const {selectedItems, productCollection, isLoading} = useAppSelector((state: AppState) => ({...state.products}));
 
-  const {cartItems} = props;
+  // const {cartItems} = props;
 
-  const calculatePrice = useMemo(() => {
-    return cartItems.reduce((ite, acc) => ite+acc.price, 0);
-  }, [cartItems])
+  // const calculatePrice = useMemo(() => {
+  //   return selectedItems.reduce((acc: number, ite: any) => acc+ite.price, 0);
+  // }, [selectedItems])
   
   const routePath = useMemo(() => {
-    return cartItems.map(el => el.id).toString().replaceAll(',','/');
-  }, [cartItems])
+    return selectedItems.map((el:any) => el.id).toString().replaceAll(',','/');
+  }, [selectedItems])
   
   return (
     <div className="w-full bg-white shadow-xl">
@@ -40,7 +43,8 @@ const NavBar: FC<{cartItems: any[]}> = memo((props) => {
           </Link>
         <div>
           <Link href={`/cart-items/${routePath}`} className="flex items-center">
-            <span className="pr-2"><GrCart /></span> <span className="text-red-500">{cartItems.length}</span>
+            <span className="pr-2"><GrCart /></span> 
+            {!!selectedItems.length && <span className="text-red-500">{selectedItems.length}</span>}
             </Link>
           </div>
         </div>
