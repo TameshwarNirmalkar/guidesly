@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useState,
-  createContext,
-  useMemo,
-} from "react";
+import { useCallback, useEffect, useState, createContext, useMemo } from "react";
 import { GrCart } from "react-icons/gr";
 // import Header from "@/components/Header";
 // import { CartContext } from "@/hooks/CartContext";
@@ -21,14 +15,10 @@ export default function HomePage() {
   // const { productList, isLoading } = useProductList();
   // const [item, setItem] = useState<any[]>([]);
 
-  const { isLoading, selectedItems, productCollection, clonedData } =
-    useAppSelector((state: AppState) => ({ ...state.products }));
+  const { isLoading, selectedItems, productCollection, clonedData } = useAppSelector((state: AppState) => ({ ...state.products }));
   const dispatch = useAppDispatch();
 
-  const allIds = useMemo(
-    () => selectedItems.map((el: any) => el.id),
-    [selectedItems]
-  );
+  const allIds = useMemo(() => selectedItems.map((el: any) => el.id), [selectedItems]);
 
   useEffect(() => {
     if (!productCollection.length) {
@@ -40,11 +30,7 @@ export default function HomePage() {
     (el: any) => {
       const hasItem = allIds.includes(el.id);
       if (hasItem) {
-        dispatch(
-          setSelectedItems(
-            [...selectedItems].filter((itm: any) => itm.id !== el.id)
-          )
-        );
+        dispatch(setSelectedItems([...selectedItems].filter((itm: any) => itm.id !== el.id)));
       } else {
         dispatch(setSelectedItems([...selectedItems].concat(el)));
       }
@@ -56,9 +42,7 @@ export default function HomePage() {
     (val: string) => {
       if (val) {
         setTimeout(() => {
-          const filteredValue = productCollection.filter(
-            (el: any) => el.title.toLowerCase().indexOf(val) !== -1
-          );
+          const filteredValue = productCollection.filter((el: any) => el.title.toLowerCase().indexOf(val) !== -1);
           dispatch(setProductCollection(filteredValue));
         }, 500);
       } else {
@@ -78,15 +62,11 @@ export default function HomePage() {
               <input
                 placeholder="Search product by name"
                 className="w-full rounded p-2 border"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  onSearchHandler(e.target.value)
-                }
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchHandler(e.target.value)}
               />
             </span>
 
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-              Today's Deal
-            </h2>
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900">Today's Deal</h2>
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
@@ -102,22 +82,13 @@ export default function HomePage() {
                 <div className="mt-4 flex justify-between">
                   <div>
                     <h3 className="text-sm text-gray-700">{el.title}</h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {el?.description?.slice(1, 20)}
-                    </p>
+                    <p className="mt-1 text-sm text-gray-500">{el?.description?.slice(1, 20)}</p>
                   </div>
                   <div className="">
                     <div className="flex justify-center flex-col">
-                      <p className="text-sm font-medium text-blue-600">
-                        ${el.price}
-                      </p>
-                      <p
-                        className="p-2 cursor-pointer"
-                        onClick={() => onAddItemToCart(el)}
-                      >
-                        <GrCart
-                          color={allIds.includes(el.id) ? "red" : "black"}
-                        />
+                      <p className="text-sm font-medium text-blue-600">${el.price}</p>
+                      <p className="p-2 cursor-pointer" onClick={() => onAddItemToCart(el)}>
+                        <GrCart color={allIds.includes(el.id) ? "red" : "black"} />
                       </p>
                     </div>
                   </div>
