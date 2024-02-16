@@ -2,7 +2,8 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
-  "prettier.printWidth": 140
+  "prettier.printWidth": 140,
+  "typescript.format.semicolons": "insert"
   // "files.associations": {
   //   "*.css": "tailwindcss"
   // }

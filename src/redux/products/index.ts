@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSelector, createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
 import { AppState } from "@redux-store/store";
 
 interface ProductCollectionI {
@@ -19,26 +19,32 @@ interface ProductStateI {
     clonedData: ProductCollectionI[];
 }
 
-const initialState = { selectedItems: [], productCollection: [], isLoading: false, clonedData: [] } as ProductStateI
+const initialState: ProductStateI = { selectedItems: [], productCollection: [], isLoading: false, clonedData: [] };
 
 const productSlice = createSlice({
     name: 'PRODUCT_SLICE',
     initialState,
     reducers: {
         setIsLoading(state: AppState, action: PayloadAction<boolean>) {
-            state.isLoading = action.payload
+            state.isLoading = action.payload;
         },
         setSelectedItems(state: AppState, action: PayloadAction<ProductCollectionI[]>) {
-            state.selectedItems = action.payload
+            state.selectedItems = action.payload;
         },
         setProductCollection(state: AppState, action: PayloadAction<ProductCollectionI[]>) {
-            state.productCollection = action.payload
+            state.productCollection = action.payload;
         },
         setClonedData(state: AppState, action: PayloadAction<ProductCollectionI[]>) {
-            state.clonedData = action.payload
+            state.clonedData = action.payload;
         }
     },
-}) as any
+}) as any;
 
-export const { setSelectedItems, setProductCollection, setIsLoading, setClonedData } = productSlice.actions
-export default productSlice.reducer
+export const { setSelectedItems, setProductCollection, setIsLoading, setClonedData } = productSlice.actions;
+export default productSlice.reducer;
+
+const productCollection = (state: AppState) => state.products.productCollection;
+export const productCollectionSelector = createSelector([productCollection], (memoItem) => memoItem);
+
+const selectedItems = (state: AppState) => state.products.selectedItems;
+export const selectedItemsSelector = createSelector([selectedItems], (memoItem) => memoItem);
