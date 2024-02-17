@@ -1,6 +1,7 @@
-import { createSelector, createSlice } from '@reduxjs/toolkit';
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { AppState } from "@redux-store/store";
+import { createProductCollectionAction } from './action';
 
 interface ProductCollectionI {
     category: string;
@@ -19,7 +20,12 @@ interface ProductStateI {
     clonedData: ProductCollectionI[];
 }
 
-const initialState: ProductStateI = { selectedItems: [], productCollection: [], isLoading: false, clonedData: [] };
+const productsAdapter = createEntityAdapter({
+    selectId: (product: ProductCollectionI) => product.id,
+    sortComparer: (a: any, b: any) => a.title.localeCompare(b.title)
+});
+
+const initialState: ProductStateI = productsAdapter.getInitialState({ selectedItems: [], productCollection: [], isLoading: false, clonedData: [] });
 
 const productSlice = createSlice({
     name: 'PRODUCT_SLICE',
@@ -38,13 +44,26 @@ const productSlice = createSlice({
             state.clonedData = action.payload;
         }
     },
+    extraReducers(builder) {
+        builder
+            .addCase(createProductCollectionAction.pending, (state, action) => {
+                state.isLoading = true;
+            }).addCase(createProductCollectionAction.fulfilled, (state: AppState, action) => {
+                state.isLoading = false;
+                state.productCollection = action.payload;
+                productsAdapter.upsertMany(state, action.payload);
+            });
+    }
 }) as any;
+
+//getSelectors creates these selectors and we rename them with aliases using destructuring
+export const {
+    selectAll: selectAllProducts,
+    selectById: selectProductById,
+    selectIds: selectProductIds
+    // Pass in a selector that returns the product slice of state
+} = productsAdapter.getSelectors((state: AppState) => state.products);
 
 export const { setSelectedItems, setProductCollection, setIsLoading, setClonedData } = productSlice.actions;
 export default productSlice.reducer;
 
-const productCollection = (state: AppState) => state.products.productCollection;
-export const productCollectionSelector = createSelector([productCollection], (memoItem) => memoItem);
-
-const selectedItems = (state: AppState) => state.products.selectedItems;
-export const selectedItemsSelector = createSelector([selectedItems], (memoItem) => memoItem);

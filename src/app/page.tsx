@@ -1,30 +1,31 @@
 "use client";
 
-import { useCallback, useEffect, useState, createContext, useMemo } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GrCart } from "react-icons/gr";
-// import Header from "@/components/Header";
-// import { CartContext } from "@/hooks/CartContext";
-// import useProductList from "@/hooks/useProductList";
+
 import SpinnerLoader from "@/components/SpinnerLoader";
 import { useAppDispatch, useAppSelector } from "@redux-store/reduxTypes";
 import { AppState } from "@redux-store/store";
-import { setProductCollection, setSelectedItems } from "@redux-store/products";
+import { setSelectedItems } from "@redux-store/products";
+import { searchSelector, selectedIdsSelector, selectedItems1 } from "@redux-store/products/memonised-selector";
 import { createProductCollectionAction } from "@redux-store/products/action";
+import CartIcon from "@/components/CartIcon";
 
 export default function HomePage() {
-  // const { productList, isLoading } = useProductList();
-  // const [item, setItem] = useState<any[]>([]);
+  const isLoading = false;
+  const [searchText, setSearchText] = useState<string>("");
 
-  const { isLoading, selectedItems, productCollection, clonedData } = useAppSelector((state: AppState) => ({ ...state.products }));
+  const selectedItems: any[] = useAppSelector(selectedItems1);
+  const allIds = useAppSelector(selectedIdsSelector);
+  const productCollection = useAppSelector((state: AppState) => searchSelector(state, searchText));
+
   const dispatch = useAppDispatch();
-
-  const allIds = useMemo(() => selectedItems.map((el: any) => el.id), [selectedItems]);
 
   useEffect(() => {
     if (!productCollection.length) {
       dispatch(createProductCollectionAction(null));
     }
-  }, []);
+  }, [productCollection]);
 
   const onAddItemToCart = useCallback(
     (el: any) => {
@@ -40,20 +41,12 @@ export default function HomePage() {
 
   const onSearchHandler = useCallback(
     (val: string) => {
-      if (val) {
-        setTimeout(() => {
-          const filteredValue = productCollection.filter((el: any) => el.title.toLowerCase().indexOf(val) !== -1);
-          dispatch(setProductCollection(filteredValue));
-        }, 500);
-      } else {
-        dispatch(setProductCollection(clonedData));
-      }
+      setSearchText(val);
     },
     [productCollection, dispatch]
   );
 
   return (
-    // <CartContext.Provider value={{ item, setItem }}>
     <main className="">
       <div className="bg-white">
         <div className="mx-auto max-w-2xl lg:max-w-7xl pt-3">
@@ -87,9 +80,7 @@ export default function HomePage() {
                   <div className="">
                     <div className="flex justify-center flex-col">
                       <p className="text-sm font-medium text-blue-600">${el.price}</p>
-                      <p className="p-2 cursor-pointer" onClick={() => onAddItemToCart(el)}>
-                        <GrCart color={allIds.includes(el.id) ? "red" : "black"} />
-                      </p>
+                      <CartIcon item={el} allIds={allIds} onAddItemToCart={onAddItemToCart} />
                     </div>
                   </div>
                 </div>
@@ -100,6 +91,5 @@ export default function HomePage() {
       </div>
       <SpinnerLoader loading={isLoading} />
     </main>
-    // </CartContext.Provider>
   );
 }
